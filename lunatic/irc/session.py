@@ -1,3 +1,5 @@
+import constants as c
+
 import socket
 import select
 import time
@@ -36,9 +38,9 @@ class Session:
 
     def __listen(self):
         while True:
-            self.recv_data = self.irc.recv(2040).decode('utf-8')
+            self.recv_data = self.irc.recv(4096).decode('utf-8')
 
-            print(self.recv_data)
+            c.write("RECEIVED : \"%s\"" % self.recv_data)
 
             recv_data_split = self.recv_data.split(' ')
 
@@ -46,7 +48,7 @@ class Session:
                 self.__send("PONG %s" % recv_data_split[1])
 
     def __send(self, data):
-        print(data)
+        c.write("SENT : \"%s\"" % data)
         self.irc.send((data + "\r\n").encode('utf-8'))
 
     def send_msg(self, data):

@@ -1,10 +1,17 @@
+import constants as c
+
 from config import Config
 from irc.session import Session
 from lunatic import Lunatic
 
 
 def main():
-    config = Config("lunatic.yaml")
+    c.write("Lunatic started")
+
+    if c.DEBUG:
+        config = Config("lunatic.yaml.debug")
+    else:
+        config = Config("lunatic.yaml")
     config.load()
 
     irc_session = Session(config)
