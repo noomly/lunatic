@@ -8,7 +8,7 @@ import modules
 
 
 class Lunatic():
-     def __init__(self, irc_session, config):
+    def __init__(self, irc_session, config):
         self.irc_session = irc_session
         self.config = config
 
