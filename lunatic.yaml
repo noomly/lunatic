@@ -1,0 +1,24 @@
+# Lunatic IRC bot default configuration file
+server: "server.ip.address"
+port: 6667
+
+password: ""
+username: "lunatic"
+hostname: "*"
+servername: "*"
+realname: "Lunatic Bot"
+
+channels:
+    - "#channel"
+
+hi: "hello world!"
+
+
+hellowords:
+    - "bonjour"
+    - "hey"
+    - "hello"
+    - "yo"
+    - "huhu"
+    - "plop"
+    - "hi"
