@@ -6,4 +6,4 @@ That's an irc bot !
 - [ ] better plugin integration
 - [ ] write some useful plugins
 - [ ] make that bot robust (manage errors efficiently etc)
-- [ ] (maybe) support multiple server connection
+- [ ] *support multiple server connection*
