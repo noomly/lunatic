@@ -47,8 +47,11 @@ class Session:
         c.write("SENT : \"%s\"" % data)
         self.irc.send((data + "\r\n").encode('utf-8'))
 
-    def get_last_recv_msg(self):
-        pass
+    def get_last_recv_data(self):
+        recv_data_save = self.recv_data
+        self.recv_data = None
+
+        return recv_data_save
 
     def send_msg(self, data):
         self.__send("PRIVMSG %s :%s" %

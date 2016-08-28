@@ -2,16 +2,19 @@ import random
 
 import constants as c
 
+import events
+
 
 def load():
-    print("HEYYY I'M LOOOAAAADED")
+    pass
 
 
-def received_data(data, irc_session, config):
-    print("RECEIVED SOMETHING YAYA TA YATA %s" % data)
-    #for word in config.bot['hellowords']:
-    #    if word in data.lower():
-    #        c.write("BBBBBBBBBBBBBBBBBBBBBBBBB %s" % word)
-    #        irc_session.send_msg(random.choice(config.bot['hellowords']))
+def event(event, irc_session, conf):
+    if isinstance(event, events.EventReceivedMsg):
+        for word in conf['hellowords']:
+            if word in event.text.lower():
+                irc_session.send_msg(random.choice(conf['hellowords']) + " " +
+                                     event.nick)
 
-# TODO: improve events
+    elif isinstance(event, events.EventQuit):
+        irc_session.send_msg("and now %s is no more." % event.nick)

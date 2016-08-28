@@ -4,6 +4,7 @@ import time
 
 import constants as c
 
+import events
 import plugins
 
 
@@ -42,14 +43,37 @@ class Lunatic():
         c.write("all plugins loaded!")
 
     def loop(self):
-        old_recv_data = self.irc_session.recv_data
         while True:
             time.sleep(0.5)
 
-            if self.irc_session.recv_data != old_recv_data:
-                old_recv_data = self.irc_session.recv_data
+            recv_data = self.irc_session.get_last_recv_data()
+
+            if recv_data is not None:
+                recv_data_split = recv_data.split(' ')
 
                 for plugin in self.plugins_:
-                    plugin.received_data(self.irc_session, self.config,
-                                         old_recv_data)
-        # TODO: complete events
+                    event = None
+
+                    if recv_data_split[1] == "JOIN":
+                        event = events.EventJoin(
+                            recv_data_split[2],
+                            recv_data.split('!')[0][1:],
+                            recv_data.split('!')[1].split('@')[0][1:])
+
+                    if recv_data_split[1] == "QUIT":
+                        event = events.EventQuit(
+                            recv_data_split[2],
+                            recv_data.split('!')[0][1:],
+                            recv_data.split('!')[1].split('@')[0][1:],
+                            recv_data.split(':', maxsplit=2)[2])
+
+                    elif recv_data_split[1] == "PRIVMSG":
+                        event = events.EventReceivedMsg(
+                            recv_data_split[2],
+                            recv_data.split('!')[0][1:],
+                            recv_data.split('!')[1].split('@')[0][1:],
+                            recv_data.split(':', maxsplit=2)[2])
+
+                    plugin.event(event, self.irc_session,
+                                 self.config.plugins_conf[
+                                     plugin.__name__.split('.')[1]])
