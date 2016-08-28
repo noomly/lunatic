@@ -1,8 +1,6 @@
 import constants as c
 
 import socket
-import select
-import time
 import threading
 
 
@@ -15,26 +13,24 @@ class Session:
         self.recv_data = None
 
     def connect(self):
-        self.irc.connect((self.config.bot['server'], self.config.bot['port']))
+        self.irc.connect((self.config.lunatic_conf['server'],
+                          self.config.lunatic_conf['port']))
 
         listen_thread = threading.Thread(target=self.__listen)
         listen_thread.start()
 
-        if self.config.bot['password'] != "":
-            self.__send("PASS %s" % self.config.bot['password'])
+        if self.config.lunatic_conf['password'] != "":
+            self.__send("PASS %s" % self.config.lunatic_conf['password'])
 
-        self.__send("NICK %s" % self.config.bot['username'])
-        self.__send("USER %s %s %s :%s" % (self.config.bot['username'],
-                                           self.config.bot['hostname'],
-                                           self.config.bot['servername'],
-                                           self.config.bot['realname']))
+        self.__send("NICK %s" % self.config.lunatic_conf['username'])
+        self.__send("USER %s %s %s :%s" %
+                    (self.config.lunatic_conf['username'],
+                     self.config.lunatic_conf['hostname'],
+                     self.config.lunatic_conf['servername'],
+                     self.config.lunatic_conf['realname']))
 
-        for channel in self.config.bot['channels']:
+        for channel in self.config.lunatic_conf['channels']:
             self.__send("JOIN %s" % channel)
-
-            if self.config.bot['hi'] != "":
-                self.__send("PRIVMSG %s :%s" % (channel,
-                                                self.config.bot['hi']))
 
     def __listen(self):
         while True:
@@ -51,5 +47,9 @@ class Session:
         c.write("SENT : \"%s\"" % data)
         self.irc.send((data + "\r\n").encode('utf-8'))
 
+    def get_last_recv_msg(self):
+        pass
+
     def send_msg(self, data):
-        self.__send("PRIVMSG %s :%s" % (self.config.bot['channels'][0], data))
+        self.__send("PRIVMSG %s :%s" %
+                    (self.config.lunatic_conf['channels'][0], data))

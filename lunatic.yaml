@@ -10,15 +10,3 @@ realname: "Lunatic Bot"
 
 channels:
     - "#channel"
-
-hi: "hello world!"
-
-
-hellowords:
-    - "bonjour"
-    - "hey"
-    - "hello"
-    - "yo"
-    - "huhu"
-    - "plop"
-    - "hi"

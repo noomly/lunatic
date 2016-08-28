@@ -18,6 +18,7 @@ def main():
     irc_session.connect()
 
     lunatic = Lunatic(irc_session, config)
+
     lunatic.loop()
 
 

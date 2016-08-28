@@ -4,7 +4,7 @@ import time
 
 import constants as c
 
-import modules
+import plugins
 
 
 class Lunatic():
@@ -12,29 +12,34 @@ class Lunatic():
         self.irc_session = irc_session
         self.config = config
 
-        c.write("loading modules...")
+        c.write("loading plugins...")
 
-        self.modules_ = []
-        modules_name = []
-        modules_path = "lunatic/modules"
-        modules_path_import = "modules"
+        self.plugins_ = []
+        plugins_name = []
+        plugins_path = "lunatic/plugins"
+        plugins_path_import = "plugins"
 
-        for module in listdir(modules_path):
-            if isfile(join(modules_path, module)) and module != "__init__.py":
-                module_final = module.split('.')[0]
+        for plugin_name in listdir(plugins_path):
+            plugin_name_split = plugin_name.split('.')
 
-                modules_name.append(module_final)
-                c.write("found module \'%s\'" % module_final)
+            if isfile(join(plugins_path, plugin_name)) and \
+                    len(plugin_name_split) == 2 and \
+                    plugin_name_split[1] == "py" and \
+                    plugin_name != "__init__.py":
 
-        for module in modules_name:
-            __import__(join(modules_path_import, module).replace('/', '.'))
-            self.modules_.append(getattr(modules, module))
+                plugins_name.append(plugin_name_split[0])
+                c.write("--found plugin \'%s\'" % plugin_name)
 
-        for module in self.modules_:
-            module.load()
-            c.write("loaded module \'%s\'" % module)
+        for plugin_name in plugins_name:
+            c.write("--loading plugin \'%s\'..." % plugin_name)
+            __import__(join(plugins_path_import,
+                            plugin_name).replace('/', '.'))
+            self.plugins_.append(getattr(plugins, plugin_name))
 
-        c.write("all modules loaded!")
+        for plugin in self.plugins_:
+            plugin.load()
+
+        c.write("all plugins loaded!")
 
     def loop(self):
         old_recv_data = self.irc_session.recv_data
@@ -44,6 +49,7 @@ class Lunatic():
             if self.irc_session.recv_data != old_recv_data:
                 old_recv_data = self.irc_session.recv_data
 
-                for module in self.modules_:
-                    module.received_data(self.irc_session, self.config,
+                for plugin in self.plugins_:
+                    plugin.received_data(self.irc_session, self.config,
                                          old_recv_data)
+        # TODO: complete events

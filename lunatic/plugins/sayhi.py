@@ -13,3 +13,5 @@ def received_data(data, irc_session, config):
     #    if word in data.lower():
     #        c.write("BBBBBBBBBBBBBBBBBBBBBBBBB %s" % word)
     #        irc_session.send_msg(random.choice(config.bot['hellowords']))
+
+# TODO: improve events
