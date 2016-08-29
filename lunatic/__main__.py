@@ -1,3 +1,5 @@
+import sys
+
 import constants as c
 
 from config import Config
@@ -24,3 +26,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    sys.exit(0)

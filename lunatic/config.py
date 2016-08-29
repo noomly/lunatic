@@ -1,6 +1,7 @@
 from os import listdir
 from os.path import isfile, join, basename
 import yaml
+import copy
 
 import constants as c
 
@@ -12,6 +13,7 @@ class Config:
 
         self.lunatic_conf = None
         self.plugins_conf = {}
+        self.plugins_conf_save = None
 
     def load(self):
         c.write("loading configuration files...")
@@ -35,7 +37,10 @@ class Config:
                                plugin_conf_name)) as file_1:
                     plugin_conf_str = plugin_conf_str + file_1.read()
 
-                self.plugins_conf[plugin_conf_name_split[0]] = yaml.load(
+                self.plugins_conf[plugin_conf_name_split[0]] = yaml.safe_load(
                         plugin_conf_str)
+                self.plugins_conf_save = copy.deepcopy(self.plugins_conf)
+                # TODO: compare last both command and if changes -> save to
+                # file
 
         c.write("all configuration files loaded!")

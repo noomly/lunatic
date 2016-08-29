@@ -9,6 +9,7 @@ class Session:
         self.config = config
 
         self.irc = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.irc.settimeout(0.5)
 
         self.recv_data = None
 
@@ -33,15 +34,19 @@ class Session:
             self.__send("JOIN %s" % channel)
 
     def __listen(self):
-        while True:
-            self.recv_data = self.irc.recv(4096).decode('utf-8')
+        while threading.main_thread().is_alive():
+            try:
+                self.recv_data = self.irc.recv(4096).decode('utf-8')
+            except socket.timeout:
+                pass
 
-            c.write("RECEIVED : \"%s\"" % self.recv_data)
+            if self.recv_data is not None:
+                c.write("RECEIVED : \"%s\"" % self.recv_data)
 
-            recv_data_split = self.recv_data.split(' ')
+                recv_data_split = self.recv_data.split(' ')
 
-            if recv_data_split[0] == "PING":
-                self.__send("PONG %s" % recv_data_split[1])
+                if recv_data_split[0] == "PING":
+                    self.__send("PONG %s" % recv_data_split[1])
 
     def __send(self, data):
         c.write("SENT : \"%s\"" % data)
