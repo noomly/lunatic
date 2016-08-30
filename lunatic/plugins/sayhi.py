@@ -1,7 +1,5 @@
 import random
 
-import constants as c
-
 import events
 
 
@@ -15,9 +13,6 @@ def event(event, irc_session, conf):
             if word in event.text.lower():
                 irc_session.send_msg(random.choice(conf['hellowords']) + " " +
                                      event.nick)
-
-        if "yay" in event.text.lower():
-            conf['yay'] = "he said yay"
 
     elif isinstance(event, events.EventQuit):
         irc_session.send_msg("and now %s is no more." % event.nick)

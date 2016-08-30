@@ -44,3 +44,19 @@ class Config:
                 # file
 
         c.write("all configuration files loaded!")
+
+    def save_changes(self):
+        c.write("saving configuration files...")
+
+        for plugin_conf_name in self.plugins_conf:
+            if self.plugins_conf[plugin_conf_name] != \
+               self.plugins_conf_save[plugin_conf_name]:
+                c.write("--saving \'%s\'..." % plugin_conf_name)
+
+                file_1 = open(join(self.plugins_conf_path,
+                                   plugin_conf_name + ".yaml"), 'w')
+
+                yaml.dump(self.plugins_conf[plugin_conf_name], file_1,
+                          default_flow_style=False)
+
+                file_1.close()

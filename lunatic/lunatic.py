@@ -79,5 +79,5 @@ class Lunatic():
                                      self.config.plugins_conf[
                                          plugin.__name__.split('.')[1]])
         except KeyboardInterrupt:
-            c.write("will save config file changes in a future update")
+            self.config.save_changes()
             return
