@@ -1,5 +1,6 @@
 from os import listdir
 from os.path import isfile, join
+import threading
 import time
 
 import constants as c
@@ -75,9 +76,11 @@ class Lunatic():
                                 recv_data.split('!')[1].split('@')[0][1:],
                                 recv_data.split(':', maxsplit=2)[2])
 
-                        plugin.event(event, self.irc_session,
+                        plugin_thread = threading.Thread(target=plugin.event,
+                                args=(event, self.irc_session,
                                      self.config.plugins_conf[
-                                         plugin.__name__.split('.')[1]])
+                                         plugin.__name__.split('.')[1]]))
+                        plugin_thread.start()
         except KeyboardInterrupt:
             self.config.save_changes()
             return
