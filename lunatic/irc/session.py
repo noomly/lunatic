@@ -58,6 +58,5 @@ class Session:
 
         return recv_data_save
 
-    def send_msg(self, data):
-        self.__send("PRIVMSG %s :%s" %
-                    (self.config.lunatic_conf['channels'][0], data))
+    def send_msg(self, receiver, data):
+        self.__send("PRIVMSG %s :%s" % (receiver, data))
